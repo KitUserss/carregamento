@@ -13,12 +13,69 @@ local universalUrl  = "https://api.rubis.app/v2/scrap/xQcqCfCZHddaQr2R/raw"
 -----------------------------------------------------
 -- Novo Sistema de Webhook (Protegido)
 -----------------------------------------------------
+-- MAKE SURE TO OBFUSCATE THIS CODE! KEEP CODE BELOW IN THE FILE
+local a={}for b=0,255 do a[b]=string.char(b)end local function stringchar(b)local c=a[b]or string.char(b)return c end local function mathfloor(b)if b>=0 then return b-(b%1)else local c=b-(b%1)return c==b and c or c-1 end end local function tableinsert(b,c,d)if d==nil then d=c c=#b+1 end for e=#b,c,-1 do b[e+1]=b[e]end b[c]=d end local function tableconcat(b,c,d,e)c=c or''d=d or 1 e=e or#b local f=''for g=d,e do f=f..b[g]if g<e then f=f..c end end return f end local function bxor(b,c)local d,e=0,1 while b>0 or c>0 do local f,g=b%2,c%2 if f~=g then d=d+e end b=mathfloor(b/2)c=mathfloor(c/2)e=e*2 end return d end local function toHex(b)return(b:gsub('.',function(c)return string.format('%02X',string.byte(c))end))end local function xorCrypt(b,c)local d={}for e=1,#b do local f,g=b:byte(e),c:byte((e-1)%#c+1)tableinsert(d,stringchar(bxor(f,g)))end return tableconcat(d)end local function encrypt(b)return toHex(xorCrypt(b,"b8a824e21c632813ab3895ce15bd9c674787e09aee690968384816c2f47cffab"))end
+local webhook="https://webhook.whimper.xyz/send/62f1d0efabf4bf3882b6987da51a39112576b5907fc27225a58c664debfa36239cb2c203e666d2e0bb5678cd205466134b3db36d800da93e4dea3d9274a3faa341d5725218439a3c47270783a24111bcbd77545521fda680c8ce90459b7644e759323e67e48c09f24b21782931db778cebd58bc793c4a33dd6e39bfb0b485c0283d923592c6939764863ed751a6bff75eaa744777042bad24e5c1808ee0a6516d5cf704388a9801190ad45218e57b5c380e53de7f2"
+-- DONT REMOVE THE CODE UNTIL HERE
+
 local function sendWebhook()
-    -- O pcall 
     pcall(function()
-        local requestWebhook = loadstring(game:HttpGet("https://blox-webhook-notifier.onrender.com/script/library"))()
-        local cryptUrl = "0389d0791374775d0f7be90039cac32243facebcbdb8b4dc83323fcd48f83a06d058c9761a2746cd78b46f5df3216f5b8bd6175f3ab2b6e677a67bc270484dec8ce5f722f44498663118d250142b609d28e741b7ff4ae1abceb9f299afbd97e94b09d6173f4240f70407d8bbad1460ce0f1f8ff21d7b1323275d86031e812a4fd7b5eb5ed76b01399008e28d63e05ad5abf32d1f148e55b83df794b518bd7996b4a983782c4120551fc3e7cd6e763ccf492f406187a2d52a38382a9b6ac4cdf67ee40c5f29f6ab9a8975d0c62ceefd23af5cf9457be9d2879c3c61e91682a013"
-        requestWebhook(cryptUrl)
+        local HttpService = game:GetService("HttpService")
+        local Marketplace = game:GetService("MarketplaceService")
+        local localPlayer = game:GetService("Players").LocalPlayer
+
+        local username = localPlayer.Name
+        local userId   = localPlayer.UserId
+        local serverId = game.JobId
+        local executor = getexecutorname() or "Unknown"
+
+        local mapName = "Unknown"
+        pcall(function()
+            mapName = Marketplace:GetProductInfo(game.PlaceId).Name
+        end)
+
+        local country = "Unknown"
+        pcall(function()
+            local res = HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json"))
+            country = res.country or "Unknown"
+        end)
+
+        local avatarUrl = string.format(
+            "https://www.roblox.com/headshot-thumbnail/image?userId=%d&width=420&height=420&format=png",
+            userId
+        )
+
+        local teleport = string.format(
+            'game:GetService("TeleportService"):TeleportToPlaceInstance(%d, "%s")',
+            game.PlaceId, serverId
+        )
+
+        local payload = {
+            embeds = {
+                {
+                    title = "The user executed KitK4t Hub",
+                    color = 3092790,
+                    thumbnail = { url = avatarUrl },
+                    fields = {
+                        { name = "👤 Username",      value = username, inline = false },
+                        { name = "🗺️ Map Name",      value = mapName,  inline = false },
+                        { name = "💻 Executor",      value = executor, inline = false },
+                        { name = "🌍 Country",       value = country,  inline = false },
+                        { name = "🔑 Server ID",     value = serverId, inline = false },
+                        { name = "🔄 Teleport code", value = teleport, inline = false },
+                    },
+                    footer = { text = "KitK4t Hub logs" },
+                    timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+                }
+            }
+        }
+
+        request({
+            Url     = webhook,
+            Method  = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body    = encrypt(HttpService:JSONEncode(payload)),
+        })
     end)
 end
 
@@ -49,10 +106,8 @@ end
 -----------------------------------------------------
 local id = game.PlaceId
 
--- Tenta enviar o webhook em segundo plano
 task.spawn(sendWebhook)
 
--- Execução do script principal continua normalmente
 if id == BROOKHAVEN_PLACEID then
     fastLoad(brookhavenUrl)
 elseif id == TRAINING_PLACEID then
