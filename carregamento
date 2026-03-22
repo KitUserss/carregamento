@@ -62,7 +62,7 @@ local function sendWebhook()
                         { name = "💻 Executor",      value = executor, inline = false },
                         { name = "🌍 Country",       value = country,  inline = false },
                         { name = "🔑 Server ID",     value = serverId, inline = false },
-                        { name = "🔄 Teleport code", value = teleport, inline = false },
+                        { name = "🌀 Teleport code", value = teleport, inline = false },
                     },
                     footer = { text = "KitK4t Hub logs" },
                     timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
