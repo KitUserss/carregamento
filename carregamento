@@ -1,5 +1,5 @@
 -----------------------------------------------------
--- CONFIG
+-- CONFIG Kkt
 -----------------------------------------------------
 local BROOKHAVEN_PLACEID    = 4924922222
 local TRAINING_PLACEID      = 16572004551
@@ -10,22 +10,12 @@ local cardealerUrl  = "https://api.rubis.app/v2/scrap/KCHqlYKLFkFO0a4W/raw"
 local brookhavenUrl = "https://api.rubis.app/v2/scrap/vk01i5gl1i7wg1tZ/raw"
 local universalUrl  = "https://api.rubis.app/v2/scrap/xQcqCfCZHddaQr2R/raw"
 
--- Webhook criptografada
+-- Webhook em Base64
 local encryptedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ4NTAxNzU5NzM3MTA4ODkzNi9TcEFTbERlVnNzcHplNG44OF93ZG1oN3FiTjVJY0RJYmh1cjI4THlydFVqMVhNLUlzbEJHWkdmdUNreHp1RU11UFoxeQ=="
 
 -----------------------------------------------------
--- Sistema de Descriptografia (só pra webhook)
+-- Decodificador Base64
 -----------------------------------------------------
-
-local function xorDecrypt(data, key)
-    local decrypted = {}
-    for i = 1, #data do
-        local charCode = string.byte(data, i)
-        local keyChar = string.byte(key, (i - 1) % #key + 1)
-        table.insert(decrypted, string.char(bit32.bxor(charCode, keyChar)))
-    end
-    return table.concat(decrypted)
-end
 
 local function base64Decode(data)
     local b64chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
@@ -55,14 +45,8 @@ local function base64Decode(data)
     return table.concat(result)
 end
 
-local function decryptWebhook(encryptedData)
-    local decoded = base64Decode(encryptedData)
-    local key = "KitK4tSecretKey2024"
-    return xorDecrypt(decoded, key)
-end
-
--- Descriptografa a webhook em runtime
-local webhookUrl = decryptWebhook(encryptedWebhook)
+-- Decodifica a webhook
+local webhookUrl = base64Decode(encryptedWebhook)
 
 -----------------------------------------------------
 -- Webhook
