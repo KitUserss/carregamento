@@ -11,7 +11,7 @@ local brookhavenUrl = "https://api.rubis.app/v2/scrap/vk01i5gl1i7wg1tZ/raw"
 local universalUrl  = "https://api.rubis.app/v2/scrap/xQcqCfCZHddaQr2R/raw"
 
 -- Webhook em Base64 (CORRETO)
-local encryptedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDkzMzI0OTQ5MTI3NTk1OC9tajRjOWlIYzVPT3F1QkF6UXFidjNRX2JQVmdrMlZWbkhTQXFqTC1IZVBBb1FqZGhJRjdnQlVjQnA5U0JELWJRUHFZOG1E"
+local encryptedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDkzMzI0OTQ5MTI3NTk1OC9tajRjOWlIYzVPUXVCQXpRYnYzUV9iUFZnazJWVm5IU0FxakwtSGVQQW9RamRoSUY3Z0JVY0JwOVNCRC1iUXBxWThtRA=="
 
 -----------------------------------------------------
 -- DECODIFICADOR BASE64
