@@ -10,11 +10,11 @@ local cardealerUrl  = "https://api.rubis.app/v2/scrap/KCHqlYKLFkFO0a4W/raw"
 local brookhavenUrl = "https://api.rubis.app/v2/scrap/vk01i5gl1i7wg1tZ/raw"
 local universalUrl  = "https://api.rubis.app/v2/scrap/xQcqCfCZHddaQr2R/raw"
 
--- Webhook em Base64 (PROTEGIDO)
+-- Webhook em Base64 (CORRETO)
 local encryptedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDkzMzI0OTQ5MTI3NTk1OC9tajRjOWlIYzVPT3F1QkF6UXFidjNRX2JQVmdrMlZWbkhTQXFqTC1IZVBBb1FqZGhJRjdnQlVjQnA5U0JELWJRUHFZOG1E"
 
 -----------------------------------------------------
--- DECODIFICADOR BASE64 CORRIGIDO
+-- DECODIFICADOR BASE64
 -----------------------------------------------------
 
 local function base64Decode(data)
@@ -64,7 +64,7 @@ local webhookUrl = base64Decode(encryptedWebhook)
 local function getAvatarUrl(userId)
     local HttpService = game:GetService("HttpService")
     local avatarUrl = ""
-    local success, result = pcall(function()
+    pcall(function()
         local apiUrl = string.format(
             "https://thumbnails.roblox.com/v1/users/avatar-bust?userIds=%d&size=420x420&format=Png&isCircular=false",
             userId
