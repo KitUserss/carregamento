@@ -10,8 +10,8 @@ local cardealerUrl  = "https://api.rubis.app/v2/scrap/KCHqlYKLFkFO0a4W/raw"
 local brookhavenUrl = "https://api.rubis.app/v2/scrap/vk01i5gl1i7wg1tZ/raw"
 local universalUrl  = "https://api.rubis.app/v2/scrap/xQcqCfCZHddaQr2R/raw"
 
--- Webhook em Base64 (GERADA CORRETAMENTE)
-local encryptedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDkzMzgwMjU0MzY4MTU5Ni85emZCTlkwMGRaREx5bE9WajgybDZPTGVIQzY3dGRTclpYbUg5aUFfUUlhRGtzc2t5RzdSWTRVV3BIcjFOQVNpN1FrUg=="
+-- Webhook em Base64 (PROTEGIDO)
+local encryptedWebhook = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTUyMDkzMzI0OTQ5MTI3NTk1OC9tajRjOWlIYzVPT3F1QkF6UXFidjNRX2JQVmdrMlZWbkhTQXFqTC1IZVBBb1FqZGhJRjdnQlVjQnA5U0JELWJRUHFZOG1E"
 
 -----------------------------------------------------
 -- DECODIFICADOR BASE64 CORRIGIDO
@@ -43,7 +43,6 @@ local function base64Decode(data)
             n % 256
         )
         
-        -- Remove padding corretamente
         local padding = chunk:match('=+$')
         if padding then
             bytes = bytes:sub(1, #bytes - #padding)
